@@ -1,6 +1,6 @@
 # Google Student Training in Engineering Program
 
-This repo contains Andrew's portfolio and STEP projects for the first half of STEP.
+(Edited)This repo contains Andrew's portfolio and STEP projects for the first half of STEP.
 This work is based on the [Google Software Product Sprint](https://g.co/softwareproductsprint) program.
 
 To get started:
