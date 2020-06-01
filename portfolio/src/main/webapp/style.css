@@ -7,3 +7,68 @@
 #greeting-container {
   margin-top: 20px;
 }
+
+.Column {
+    width:400px; text-align:left; float:left;
+}  
+
+.Clear { 
+    clear: both; 
+}
+
+.Outer { 
+    background-color:transparent;
+    width:800px;
+    text-align:center;
+}
+
+.CenterAll { 
+    width:800px; 
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.image-thumbnails {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.image-thumbnails img {
+  margin: 10px;
+  max-height: 200px;
+  max-width: 200px;
+}
+
+.image-thumbnails img:hover {
+  border: thick solid black;
+}
+
+#random-image-container img {
+  margin-top: 20px;
+  max-height: 500px;
+  max-width: 500px;
+}
+
+body {
+  background-image: url('/Genie_Imgs/gg2.png');
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+#panel, .flip {
+  font-size: 16px;
+  padding: 10px;
+  text-align: center;
+  background-color: #4CAF50;
+  color: white;
+  border: solid 1px #a6d8a8;
+  margin: auto;
+}
+
+#panel {
+  display: none;
+}
+
+

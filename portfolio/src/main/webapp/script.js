@@ -12,17 +12,43 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
+function openMemePage() {
+    if (confirm("Some of the words in the memes may be inappropriate for some viewers. Continue?")) {
+        window.open("meme_view.html",'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;
+    }
+    else{
+        alert("Memes cancelled!");
+    }
+}
 
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function randomMeme() {    
+  // Have 11 images in my directory, so generate a random index between
+  // 1 and 11.
+  const memeIndex = Math.floor(Math.random() * 11) + 1;
+  const memeUrl = '/Genie_Imgs/memes/meme' + memeIndex + '.jpg';
+
+  const memeElement = document.createElement('img');
+  memeElement.src = memeUrl;
+
+  const memeContainer = document.getElementById('random-image-container');
+  // Remove the previous image.
+  memeContainer.innerHTML = '';
+  memeContainer.appendChild(memeElement);
+}
+
+function showMemePanel() {
+    document.getElementById("panel").style.display = "block";
+}
+
+function openProjects(){
+    window.open("projects.html", "_self")
+}
+
+function openGallery(){
+    window.open("G_gallery.html", "_self")
+}
+
+function openContact(){
+    window.open("contact_me.html")
 }
