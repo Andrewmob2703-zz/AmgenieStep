@@ -14,12 +14,12 @@
 
 
 function openMemePage() {
-    if (confirm("Some of the words in the memes may be inappropriate for some viewers. Continue?")) {
-        window.open("meme_view.html",'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;
-    }
-    else{
-        alert("Memes cancelled!");
-    }
+  if (confirm("Some of the words in the memes may be inappropriate for some viewers. Continue?")) {
+    window.open("meme_view.html",'targetWindow','toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=800,height=500'); return false;
+  }
+  else{
+    alert("Memes cancelled!");
+  }
 }
 
 function randomMeme() {    
@@ -38,17 +38,17 @@ function randomMeme() {
 }
 
 function showMemePanel() {
-    document.getElementById("panel").style.display = "block";
+  document.getElementById("panel").style.display = "block";
 }
 
 function openProjects(){
-    window.open("projects.html", "_self")
+  window.open("projects.html", "_self")
 }
 
 function openGallery(){
-    window.open("G_gallery.html", "_self")
+  window.open("G_gallery.html", "_self")
 }
 
 function openContact(){
-    window.open("contact_me.html")
+  window.open("contact_me.html")
 }

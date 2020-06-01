@@ -1,4 +1,4 @@
-#content {
+#content {    
   margin-left: auto;
   margin-right: auto;
   width: 650px;
@@ -9,23 +9,23 @@
 }
 
 .Column {
-    width:400px; text-align:left; float:left;
+  width:400px; text-align:left; float:left;
 }  
 
 .Clear { 
-    clear: both; 
+  clear: both; 
 }
 
 .Outer { 
-    background-color:transparent;
-    width:800px;
-    text-align:center;
+  background-color:transparent;
+  width:800px;
+  text-align:center;
 }
 
 .CenterAll { 
-    width:800px; 
-    margin-left: auto;
-    margin-right: auto; 
+  width:800px; 
+  margin-left: auto;
+  margin-right: auto; 
 }
 
 .image-thumbnails {
