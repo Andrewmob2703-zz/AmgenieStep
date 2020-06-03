@@ -52,3 +52,11 @@ function openGallery(){
 function openContact(){
   window.open("contact_me.html")
 }
+
+async function serverCommunication(){
+  const serverResponse = await fetch("/data");
+  console.log(serverResponse);
+  const responseToText = await serverResponse.text();
+  console.log(responseToText);
+  document.getElementById("greeting-container").innerHTML = responseToText;
+}
