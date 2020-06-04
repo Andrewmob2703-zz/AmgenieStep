@@ -68,5 +68,7 @@ async function serverCommunication(){
 
   //Add to page 
   const message = document.getElementById("greeting-container");
-  message.innerHTML = ('<h3>' + wordsArray[0] + ' ' + wordsArray[1] + ' ' + wordsArray[2] + '</h3>');
+  for (let i = 0; i < wordsArray.length; i++){
+    message.innerText += ' ' + wordsArray[i];
+  }
 }
