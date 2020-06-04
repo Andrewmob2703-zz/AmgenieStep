@@ -53,10 +53,20 @@ function openContact(){
   window.open("contact_me.html")
 }
 
-async function serverCommunication(){
+async function getWordsFromServer(){
   const serverResponse = await fetch("/data");
   console.log(serverResponse);
-  const responseToText = await serverResponse.text();
-  console.log(responseToText);
-  document.getElementById("greeting-container").innerHTML = responseToText;
+  const responseToJson = await serverResponse.json();
+  
+  //create object with response from server
+  wordsArray = responseToJson;
+
+  //access different elements using [] since it's an array
+  console.log(wordsArray[0]);
+  console.log(wordsArray[1]);
+  console.log(wordsArray[2]);
+
+  //Add to page 
+  const message = document.getElementById("greeting-container");
+  message.innerText += wordsArray.join(' ');
 }
