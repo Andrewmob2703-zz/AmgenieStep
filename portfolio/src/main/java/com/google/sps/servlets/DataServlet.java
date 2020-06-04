@@ -32,7 +32,7 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json;");
     response.getWriter().println(toJson);
   }
-  private String convertToJson(String [] wordArray) {
+  private String convertToJson(String[] wordArray) {
     Gson gson = new Gson();
     return gson.toJson(wordArray);
   }
