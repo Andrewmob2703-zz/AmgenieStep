@@ -56,7 +56,17 @@ function openContact(){
 async function serverCommunication(){
   const serverResponse = await fetch("/data");
   console.log(serverResponse);
-  const responseToText = await serverResponse.text();
-  console.log(responseToText);
-  document.getElementById("greeting-container").innerHTML = responseToText;
+  const responseToJson = await serverResponse.json();
+  
+  //create object with response from server
+  myObject = responseToJson;
+
+  //access different elements using [] since it's an array
+  console.log(myObject[0]);
+  console.log(myObject[1]);
+  console.log(myObject[2]);
+
+  //Add to page 
+  const message = document.getElementById("greeting-container");
+  message.innerHTML = ('<h3>' + myObject[0] + ' ' + myObject[1] + ' ' + myObject[2] + '</h3>');
 }
