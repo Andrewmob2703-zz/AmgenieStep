@@ -59,14 +59,14 @@ async function serverCommunication(){
   const responseToJson = await serverResponse.json();
   
   //create object with response from server
-  myObject = responseToJson;
+  wordsArray = responseToJson;
 
   //access different elements using [] since it's an array
-  console.log(myObject[0]);
-  console.log(myObject[1]);
-  console.log(myObject[2]);
+  console.log(wordsArray[0]);
+  console.log(wordsArray[1]);
+  console.log(wordsArray[2]);
 
   //Add to page 
   const message = document.getElementById("greeting-container");
-  message.innerHTML = ('<h3>' + myObject[0] + ' ' + myObject[1] + ' ' + myObject[2] + '</h3>');
+  message.innerHTML = ('<h3>' + wordsArray[0] + ' ' + wordsArray[1] + ' ' + wordsArray[2] + '</h3>');
 }

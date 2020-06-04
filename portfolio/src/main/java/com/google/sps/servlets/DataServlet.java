@@ -26,15 +26,14 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String[] ArrayList = {"Hey!", "Check", "here!"};
-    String To_Json = convertToJson_Gson(ArrayList);
+    String[] wordArray = {"Hey!", "Check", "here!"};
+    String toJson = convertToJson(wordArray);
 
     response.setContentType("application/json;");
-    response.getWriter().println(To_Json);
+    response.getWriter().println(toJson);
   }
-  private String convertToJson_Gson(String [] ArrayList) {
+  private String convertToJson(String [] wordArray) {
     Gson gson = new Gson();
-    String ToJson = gson.toJson(ArrayList);
-    return ToJson;
+    return gson.toJson(wordArray);
   }
 }
