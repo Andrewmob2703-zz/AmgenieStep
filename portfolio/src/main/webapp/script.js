@@ -37,7 +37,7 @@ function randomMeme() {
   memeContainer.appendChild(memeElement);
 }
 
-function showMemePanel() {
+function showHiddenPanel() {
   document.getElementById("panel").style.display = "block";
 }
 
@@ -53,20 +53,11 @@ function openContact(){
   window.open("contact_me.html")
 }
 
-async function getWordsFromServer(){
-  const serverResponse = await fetch("/data");
-  console.log(serverResponse);
-  const responseToJson = await serverResponse.json();
-  
-  //create object with response from server
-  wordsArray = responseToJson;
-
-  //access different elements using [] since it's an array
-  console.log(wordsArray[0]);
-  console.log(wordsArray[1]);
-  console.log(wordsArray[2]);
-
-  //Add to page 
-  const message = document.getElementById("greeting-container");
-  message.innerText += wordsArray.join(' ');
+function validateForm() {
+  var name = document.forms["commentForm"]["name"].value;
+  var comments = document.forms["commentForm"]["comment"].value;
+  if (name === "" || comments === "") {
+    alert("Name and comments cannot be empty.");
+    return false;
+  }
 }

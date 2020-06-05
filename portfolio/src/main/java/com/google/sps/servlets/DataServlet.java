@@ -24,16 +24,23 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
+  private final String COMMENT = "comment";
+  private final String NAME = "name"; 
   @Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    String[] wordArray = {"Hey!", "Check", "here!"};
-    String toJson = convertToJson(wordArray);
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String getMessage = getParameter(request, COMMENT, "");
+    String submissionResponse = "Submitted! Thank you " + getParameter(request, NAME, "");
 
-    response.setContentType("application/json;");
-    response.getWriter().println(toJson);
+    response.setContentType("text/html;");
+    response.getWriter().println("<h3>" + submissionResponse + "</h3>");
+    response.getWriter().println("<p> <b>message sent:</b> <i>" + getMessage + "</i></p>");
   }
-  private String convertToJson(String[] wordArray) {
-    Gson gson = new Gson();
-    return gson.toJson(wordArray);
+
+  private String getParameter(HttpServletRequest request, String name, String defaultValue) {
+    String value = request.getParameter(name);
+    if (value == null) {
+      return defaultValue;
+    }
+    return value;
   }
 }
