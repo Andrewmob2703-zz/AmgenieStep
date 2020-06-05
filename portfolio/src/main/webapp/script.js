@@ -53,18 +53,6 @@ function openContact(){
   window.open("contact_me.html")
 }
 
-async function getMessageFromServer(){
-  /** 
-  const serverResponse = await fetch("/data");
-  console.log(serverResponse);
-  const responseToJson = await serverResponse.json();
-  
-
-  Add to page
-  const message = document.getElementById("greeting-container");
-  message.innerText = responseToJson;
-  */
-}
 function validateForm() {
   var name = document.forms["commentForm"]["name"].value;
   var comments = document.forms["commentForm"]["comment"].value;
