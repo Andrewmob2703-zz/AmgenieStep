@@ -28,17 +28,24 @@ public class DataServlet extends HttpServlet {
   private final String NAME = "name"; 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String finalResponse = "";
     String getMessage = getParameter(request, COMMENT, "");
-    String submissionResponse = "Submitted! Thank you " + getParameter(request, NAME, "");
-
+    
     response.setContentType("text/html;");
-    response.getWriter().println("<h3>" + submissionResponse + "</h3>");
-    response.getWriter().println("<p> <b>message sent:</b> <i>" + getMessage + "</i></p>");
+
+    if (getMessage.equals("")) {
+      finalResponse = "Got no comment.";
+      response.getWriter().println("<h3>" + finalResponse + "</h3>");
+    }else {
+      finalResponse = "Submitted! Thank you " + getParameter(request, NAME, "");
+      response.getWriter().println("<h3>" + finalResponse + "</h3>");
+      response.getWriter().println("<p> <b>message sent:</b> <i>" + getMessage + "</i></p>");
+    }    
   }
 
   private String getParameter(HttpServletRequest request, String name, String defaultValue) {
     String value = request.getParameter(name);
-    if (value == null) {
+    if (value.equals("")) {
       return defaultValue;
     }
     return value;
