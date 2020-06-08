@@ -61,3 +61,24 @@ function validateForm() {
     return false;
   }
 }
+
+function loadComments() {
+  fetch('/data').then(response => response.json()).then((messages) => {
+    const commentListElement = document.getElementById('comment-list');
+    messages.forEach((message) => {
+      commentListElement.appendChild(createCommentElement(message));
+    })
+  });
+}
+
+function createCommentElement(message) {
+  const commentElement = document.createElement('li');
+  commentElement.className = 'comment';
+
+  const messageElement = document.createElement('span');
+  messageElement.innerText = message.comment;
+
+  commentElement.appendChild(messageElement);
+
+  return commentElement;
+}
