@@ -34,6 +34,14 @@
           <input type="submit" value="Send">
           <input type="reset" value="Reset">
         </form>
+        <h2>Load comments</h2>
+        <form action="/data">
+          <label for="loadcommentquantity">Specify the number of comments to load:</label>
+          <input type="number" id="quantity" name="loadcommentquantity" min="1" max="10">
+          <input type="submit">
+        </form> <br/>
+
+        <ul id="comment-list"></ul>
       </div>
     </div>
   </body>
