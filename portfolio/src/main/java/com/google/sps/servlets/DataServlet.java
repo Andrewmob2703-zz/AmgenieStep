@@ -36,11 +36,16 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   private final String COMMENT = "comment";
   private final String NAME = "name";
-  private final String MAX_COMMENTS_LOAD = "loadcommentquantity";
+  private final String GET_LOAD_COMMENT_QUANTITY = "loadcommentquantity";
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int maxCommentsLoad = Integer.parseInt(request.getParameter(MAX_COMMENTS_LOAD));
+    int maxCommentsLoad = getUserInput(request);
+    if (maxCommentsLoad == -1) {
+      response.setContentType("text/html");
+      response.getWriter().println("Please enter an integer.");
+      return;
+    }
 
     Query query = new Query(COMMENT).addSort("timestamp", SortDirection.DESCENDING);
 
@@ -98,5 +103,18 @@ public class DataServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private int getUserInput(HttpServletRequest request) {
+    int maxCommentsLoad = 0;
+
+    //get input and convert to int
+    try {
+      maxCommentsLoad = Integer.parseInt(request.getParameter(GET_LOAD_COMMENT_QUANTITY));
+    } catch (NumberFormatException nfe) {
+      System.err.println("Input exception: " + nfe.getMessage());
+      return -1;
+    }
+    return maxCommentsLoad;
   }
 }
