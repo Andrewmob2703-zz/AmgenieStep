@@ -20,6 +20,7 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.datastore.FetchOptions;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import java.io.IOException;
@@ -35,16 +36,24 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
   private final String COMMENT = "comment";
   private final String NAME = "name";
-  
+  private final String GET_LOAD_COMMENT_QUANTITY = "loadcommentquantity";
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("comment").addSort("timestamp", SortDirection.DESCENDING);
+    int maxCommentsLoad = getUserInput(request);
+    if (maxCommentsLoad == -1) {
+      response.setContentType("text/html");
+      response.getWriter().println("Please enter an integer.");
+      return;
+    }
+
+    Query query = new Query(COMMENT).addSort("timestamp", SortDirection.DESCENDING);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> messages = new ArrayList<>();
-    for (Entity entity : results.asIterable()) {
+    for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(maxCommentsLoad))) {
       long id = entity.getKey().getId();
       String comment = (String) entity.getProperty(COMMENT);
       long timestamp = (long) entity.getProperty("timestamp");
@@ -94,5 +103,18 @@ public class DataServlet extends HttpServlet {
       return defaultValue;
     }
     return value;
+  }
+
+  private int getUserInput(HttpServletRequest request) {
+    int maxCommentsLoad = 0;
+
+    //get input and convert to int
+    try {
+      maxCommentsLoad = Integer.parseInt(request.getParameter(GET_LOAD_COMMENT_QUANTITY));
+    } catch (NumberFormatException nfe) {
+      System.err.println("Input exception: " + nfe.getMessage());
+      return -1;
+    }
+    return maxCommentsLoad;
   }
 }
