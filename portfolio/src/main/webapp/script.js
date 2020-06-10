@@ -95,6 +95,6 @@ function createCommentElement(message) {
 // Tell server to delete comment
 function deleteComment(message) {
   const params = new URLSearchParams();
-  params.append('id', message.id);
+  params.append('messageId', message.id);
   fetch('/delete-data', {method: 'POST', body: params});
 }

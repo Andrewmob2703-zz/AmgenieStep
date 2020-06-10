@@ -34,10 +34,11 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  private final String COMMENT = "comment";
   private final String NAME = "name";
   private final String GET_LOAD_COMMENT_QUANTITY = "loadcommentquantity";
 
+  public static String COMMENT = "comment";
+  
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int maxCommentsLoad = getUserInput(request);

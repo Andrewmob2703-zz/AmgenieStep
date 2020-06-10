@@ -24,15 +24,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet responsible for deleting tasks. */
+/** Servlet responsible for deleting comments. */
 @WebServlet("/delete-data")
 public class DeleteDataServlet extends HttpServlet {
-  private final String COMMENT = "comment";
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    long id = Long.parseLong(request.getParameter("id"));
+    long messageId = Long.parseLong(request.getParameter("messageId"));
 
-    Key commentEntityKey = KeyFactory.createKey(COMMENT, id);
+    Key commentEntityKey = KeyFactory.createKey(DataServlet.COMMENT, messageId);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.delete(commentEntityKey);
   }
