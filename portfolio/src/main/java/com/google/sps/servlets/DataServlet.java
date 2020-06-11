@@ -37,7 +37,7 @@ public class DataServlet extends HttpServlet {
   private final String NAME = "name";
   private final String GET_LOAD_COMMENT_QUANTITY = "loadcommentquantity";
 
-  public static String COMMENT = "comment";
+  public static final String COMMENT = "comment";
   
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
