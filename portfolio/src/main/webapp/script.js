@@ -41,6 +41,20 @@ function showHiddenPanel() {
   document.getElementById("panel").style.display = "block";
 }
 
+function showCommentsPanel() {
+  fetch('/login_stats').then(response => response.json()).then((isLoggedIn) => {
+    if (isLoggedIn) {
+      document.getElementById("panel").style.display = "block";
+    } else {
+        window.open("/login_out", "_self")
+    }
+  });
+}
+
+function logOut() {
+  window.open("/login_out", "_self")
+}
+
 function openProjects(){
   window.open("projects.html", "_self")
 }
@@ -50,7 +64,7 @@ function openGallery(){
 }
 
 function openContact(){
-  window.open("contact_me.html")
+  window.open("contact_me.html", "_self")
 }
 
 function validateForm() {
@@ -76,7 +90,7 @@ function createCommentElement(message) {
   commentElement.className = 'comment';
 
   const messageElement = document.createElement('span');
-  messageElement.innerText = message.comment;
+  messageElement.innerText = message.userEmail + ": " + message.comment;
 
   const deleteButtonElement = document.createElement('button');
   deleteButtonElement.innerText = 'Delete';
@@ -92,6 +106,7 @@ function createCommentElement(message) {
 
   return commentElement;
 }
+
 // Tell server to delete comment
 function deleteComment(message) {
   const params = new URLSearchParams();

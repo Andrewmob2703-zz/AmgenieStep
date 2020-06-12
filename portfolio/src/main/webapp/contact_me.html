@@ -11,7 +11,7 @@
       }
     </style>
   </head>
-  <body onload="loadComments()">
+  <body>
     <a href="index.html" style="color:blue">Back</a> <br/>
     <div id="content">
       <h2>Click to send me a quick email.</h2>
@@ -22,13 +22,11 @@
         <li> <a href="https://www.instagram.com/amgenie364/" target="new"><img src="/Genie_Imgs/icons/intG.png" width="10%" height="10%"> </a> </li>
         <li> <a href="https://www.facebook.com/Andrew201607/" target="new"><img src="/Genie_Imgs/icons/fbIcon.png" width="10%" height="10%"> </a> </li>
       </ol>
-      <p class="flip" onclick="showHiddenPanel()">Click here to send me a quick message</p>
+      <p class="flip" onclick="showCommentsPanel()">Click here to send me a quick message</p>
       <div id="panel">
         <form name="commentForm" action="/data" onsubmit="return validateForm()" method="POST">
           Name:<br>
           <input type="text" name="name"><br>
-          E-mail:<br>
-          <input type="text" name="mail"><br>
           Comment:<br>
           <input type="text" name="comment" size="50"<br><br>
           <input type="submit" value="Send">
@@ -42,6 +40,7 @@
         </form> <br/>
 
         <ul id="comment-list"></ul>
+        <button onclick="logOut()">Logout</button>
       </div>
     </div>
   </body>
