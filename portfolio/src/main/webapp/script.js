@@ -106,6 +106,7 @@ function createCommentElement(message) {
 
   return commentElement;
 }
+
 // Tell server to delete comment
 function deleteComment(message) {
   const params = new URLSearchParams();

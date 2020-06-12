@@ -46,13 +46,13 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
 
-    //server side Get check: login required to load comments
+    // server side Get check: login required to load comments
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/login_out");
       return;
     }
 
-    //user specified comments load quantity should be a number
+    // user specified comments load quantity should be a number
     int maxCommentsLoad = getUserInput(request);
     if (maxCommentsLoad == -1) {
       response.setContentType("text/html");
@@ -62,10 +62,13 @@ public class DataServlet extends HttpServlet {
 
     String userEmail = userService.getCurrentUser().getEmail();
 
-    /**search for comments made with the current user's email address
+    /** search for comments made with the current user's email address
       start with last comment made
     */
-    Query query = new Query(COMMENT).setFilter(new Query.FilterPredicate(USER_EMAIL, Query.FilterOperator.EQUAL, userEmail)).addSort("timestamp", SortDirection.DESCENDING);
+    Query query = 
+        new Query(COMMENT).setFilter(new Query.FilterPredicate(
+            USER_EMAIL, Query.FilterOperator.EQUAL, userEmail))
+                .addSort("timestamp", SortDirection.DESCENDING);
     
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -74,10 +77,10 @@ public class DataServlet extends HttpServlet {
     for (Entity entity : results.asIterable(FetchOptions.Builder.withLimit(maxCommentsLoad))) {
       long messageId = entity.getKey().getId();
       String comment = (String) entity.getProperty(COMMENT);
-      String uEmail = (String) entity.getProperty(USER_EMAIL);
+      String email = (String) entity.getProperty(USER_EMAIL);
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment message = new Comment(messageId, comment,  uEmail, timestamp);
+      Comment message = new Comment(messageId, comment, email, timestamp);
       messages.add(message);
     }
 
@@ -91,7 +94,7 @@ public class DataServlet extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
 
-    //server side Post check: login required to comment
+    // server side Post check: login required to comment
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/login_out");
       return;
@@ -102,7 +105,6 @@ public class DataServlet extends HttpServlet {
     String userEmail = userService.getCurrentUser().getEmail();
     long timestamp = System.currentTimeMillis();
     
-    
     Entity commentEntity = new Entity(COMMENT);
     commentEntity.setProperty(NAME, user);
     commentEntity.setProperty(COMMENT, comment);
@@ -112,7 +114,7 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
     
-    //send appropriate confirmation response
+    // send appropriate confirmation response
     String finalResponse = "";
     
     response.setContentType("text/html;");
@@ -138,7 +140,7 @@ public class DataServlet extends HttpServlet {
   private int getUserInput(HttpServletRequest request) {
     int maxCommentsLoad = 0;
 
-    //get input and convert to int
+    // get input and convert to int
     try {
       maxCommentsLoad = Integer.parseInt(request.getParameter(GET_LOAD_COMMENT_QUANTITY));
     } catch (NumberFormatException nfe) {

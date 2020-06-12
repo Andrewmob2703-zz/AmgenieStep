@@ -17,9 +17,9 @@ package com.google.sps.servlets;
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.io.PrintWriter;
-import com.google.gson.Gson;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +44,6 @@ public class LoginServlet extends HttpServlet {
       String loginUrl = userService.createLoginURL("/contact_me.html");
       out.println("<h3>Login is required to access comments section</h3>");
       out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
-      return;
     }
   }
 }
