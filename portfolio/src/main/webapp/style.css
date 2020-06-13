@@ -87,4 +87,10 @@ body {
   flex-grow: 1;
 }
 
+#language {
+  display: block;
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
 
