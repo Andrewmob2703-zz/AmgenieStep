@@ -128,7 +128,8 @@ public class DataServlet extends HttpServlet {
     // send appropriate confirmation response
     String finalResponse = "";
     
-    response.setContentType("text/html;");
+    response.setContentType("text/html; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
 
     if (comment.equals("")) {
       finalResponse = "Got no comment.";
