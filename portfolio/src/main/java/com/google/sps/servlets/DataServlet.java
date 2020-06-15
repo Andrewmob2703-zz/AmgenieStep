@@ -23,6 +23,9 @@ import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import java.io.IOException;
@@ -101,13 +104,21 @@ public class DataServlet extends HttpServlet {
     }
 
     String comment = getParameter(request, COMMENT, "");
+    String languageCode = getParameter(request, "lang", "");
     String user = getParameter(request, NAME, "");
     String userEmail = userService.getCurrentUser().getEmail();
     long timestamp = System.currentTimeMillis();
+
+    // Translate comment.
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    Translation translation =
+        translate.translate(comment, Translate.TranslateOption.targetLanguage(languageCode));
+    String translatedComment = translation.getTranslatedText();
     
+    // store comment details
     Entity commentEntity = new Entity(COMMENT);
     commentEntity.setProperty(NAME, user);
-    commentEntity.setProperty(COMMENT, comment);
+    commentEntity.setProperty(COMMENT, translatedComment);
     commentEntity.setProperty(USER_EMAIL, userEmail);
     commentEntity.setProperty("timestamp", timestamp);
 
@@ -117,15 +128,17 @@ public class DataServlet extends HttpServlet {
     // send appropriate confirmation response
     String finalResponse = "";
     
-    response.setContentType("text/html;");
+    response.setContentType("text/html; charset=UTF-8");
+    response.setCharacterEncoding("UTF-8");
 
     if (comment.equals("")) {
       finalResponse = "Got no comment.";
       response.getWriter().println("<h3>" + finalResponse + "</h3>");
     } else {
+      System.out.println(languageCode);
       finalResponse = "Submitted! Thank you " + user;
       response.getWriter().println("<h3>" + finalResponse + "</h3>");
-      response.getWriter().println("<p> <b>message sent:</b> <i>" + comment + "</i></p>");
+      response.getWriter().println("<p> <b>message sent:</b> <i>" + translatedComment + "</i></p>");
     }    
   }
 
