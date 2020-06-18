@@ -14,10 +14,51 @@
 
 package com.google.sps;
 
+import com.google.sps.Event;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public final class FindMeetingQuery {
+  private static final Collection<Event> NO_EVENTS = Collections.emptySet();
+  private static final Collection<String> NO_ATTENDEES = Collections.emptySet();
+
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    throw new UnsupportedOperationException("TODO: Implement this method.");
+    Collection<String> attendees = getRequestAttendees(request);
+    long requestDuration = getRequestDuration(request);
+
+    int eventStart = getEventTimeSpan(events).start();
+    int eventEnd = getEventTimeSpan(events).end();
+
+    if (attendees == NO_ATTENDEES){
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    } 
+    
+    if (requestDuration > TimeRange.WHOLE_DAY.duration()) {
+      return Arrays.asList();
+    }
+
+    if (events != NO_EVENTS) {
+      Collection<TimeRange> availableTimes = 
+          Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, eventStart, false),
+            TimeRange.fromStartEnd(eventEnd, TimeRange.END_OF_DAY, true));
+    }
+    
+    // TODO: Finish Method Implementation...
+
+  }
+
+  public long getRequestDuration(MeetingRequest request) {
+    return request.getDuration();
+  }
+
+  public Collection<String> getRequestAttendees(MeetingRequest request) {
+    return request.getAttendees();
+  }
+
+  public TimeRange getEventTimeSpan(Collection<Event> event) {
+    return event.getWhen();
   }
 }
