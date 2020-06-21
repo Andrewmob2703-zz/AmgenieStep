@@ -14,25 +14,29 @@
 
 package com.google.sps;
 
-import com.google.sps.Event;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 
 public final class FindMeetingQuery {
   private static final Collection<Event> NO_EVENTS = Collections.emptySet();
   private static final Collection<String> NO_ATTENDEES = Collections.emptySet();
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    Collection<String> attendees = getRequestAttendees(request);
-    long requestDuration = getRequestDuration(request);
+    Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
+    Collection<Event> totalEvents = new ArrayList<Event>();
+    Collection<String> attendeesInRequest = request.getAttendees();
+    long requestDuration = request.getDuration();
 
-    int eventStart = getEventTimeSpan(events).start();
-    int eventEnd = getEventTimeSpan(events).end();
+    int TimeForNewEventsBegin = TimeRange.START_OF_DAY;
+    int endOfDay = TimeRange.END_OF_DAY;
+    int eventStarts = 0;
+    int eventDuration = 0;
+    int eventEnds = 0;
+    String eventTitle = "";
 
-    if (attendees == NO_ATTENDEES){
+    if (attendeesInRequest == NO_ATTENDEES){
       return Arrays.asList(TimeRange.WHOLE_DAY);
     } 
     
@@ -40,25 +44,52 @@ public final class FindMeetingQuery {
       return Arrays.asList();
     }
 
-    if (events != NO_EVENTS) {
-      Collection<TimeRange> availableTimes = 
-          Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, eventStart, false),
-            TimeRange.fromStartEnd(eventEnd, TimeRange.END_OF_DAY, true));
+    for (Event event : events){
+      eventStarts = event.getWhen().start();
+      eventDuration = event.getWhen().duration();
+      eventEnds = event.getWhen().end();
+      eventTitle = event.getTitle();
+      if (attendeesInRequest.size() == 1){
+        for (String attendeeInRequest : attendeesInRequest) {
+          for (String attendeeInEvent : event.getAttendees()) {
+            if (!attendeeInRequest.equals(attendeeInEvent)) {
+              availableTimes.add(TimeRange.fromStartEnd(TimeForNewEventsBegin, endOfDay, true));
+              return availableTimes;
+            }
+          }
+        }
+      }
+      if (TimeForNewEventsBegin >= eventStarts && TimeForNewEventsBegin >= eventEnds) 
+      {continue;}
+      if (TimeForNewEventsBegin > eventStarts) {
+        totalEvents.add(new Event(eventTitle, TimeRange.fromStartEnd(
+            TimeForNewEventsBegin, eventEnds, false), attendeesInRequest));
+      } else {
+          totalEvents.add(new Event(eventTitle, TimeRange.fromStartDuration(
+              eventStarts, eventDuration), attendeesInRequest));
+      }
+      TimeForNewEventsBegin = eventEnds;
     }
-    
-    // TODO: Finish Method Implementation...
 
-  }
+    TimeForNewEventsBegin = TimeRange.START_OF_DAY;
+    for (Event event : totalEvents) {
+      eventStarts = event.getWhen().start();
+      eventEnds = event.getWhen().end();
+      TimeRange beforeNextEvent = TimeRange.fromStartEnd(TimeForNewEventsBegin, eventStarts, false);
+      if (beforeNextEvent.duration() >= requestDuration) {
+        availableTimes.add(beforeNextEvent);
+      }
+      TimeForNewEventsBegin = eventEnds;
+    }
 
-  public long getRequestDuration(MeetingRequest request) {
-    return request.getDuration();
-  }
+    TimeRange afterLastEventInDay = TimeRange.fromStartEnd(
+        TimeForNewEventsBegin, endOfDay, true);
 
-  public Collection<String> getRequestAttendees(MeetingRequest request) {
-    return request.getAttendees();
-  }
-
-  public TimeRange getEventTimeSpan(Collection<Event> event) {
-    return event.getWhen();
+    // From last event to the end of the day could be available 
+    // if there's some time in-between  
+    if (afterLastEventInDay.start() - 1 != endOfDay) {
+      availableTimes.add(afterLastEventInDay);
+    }
+    return availableTimes;
   }
 }
