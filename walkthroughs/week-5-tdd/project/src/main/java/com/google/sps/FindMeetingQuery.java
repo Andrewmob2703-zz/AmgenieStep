@@ -14,12 +14,13 @@
 
 package com.google.sps;
 
-import java.util.Arrays;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 
 public final class FindMeetingQuery {
   private static final Collection<Event> NO_EVENTS = Collections.emptySet();
