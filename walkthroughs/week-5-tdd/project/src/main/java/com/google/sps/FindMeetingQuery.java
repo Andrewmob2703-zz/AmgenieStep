@@ -14,82 +14,97 @@
 
 package com.google.sps;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public final class FindMeetingQuery {
   private static final Collection<Event> NO_EVENTS = Collections.emptySet();
-  private static final Collection<String> NO_ATTENDEES = Collections.emptySet();
+  private static final Collection<String> NO_ATTENDEES= Collections.emptySet();  
+  private static final int endOfDay = TimeRange.END_OF_DAY; 
+  
+  private static int WHOLE_DAY = 1440;
 
-  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
-    Collection<Event> totalEvents = new ArrayList<Event>();
-    Collection<String> attendeesInRequest = request.getAttendees();
-    long requestDuration = request.getDuration();
+    // sort and return busy times for requested attendees
+    private static Collection<TimeRange> getCoveredTimesForAttendees(Collection<Event> events,
+    Collection<String> mandatoryAttendees) {   
+      Set<String> setOfAttendees = new HashSet<String>();
+      for(String attendee : mandatoryAttendees) {
+        setOfAttendees.add(attendee);
+      }
 
-    int TimeForNewEventsBegin = TimeRange.START_OF_DAY;
-    int endOfDay = TimeRange.END_OF_DAY;
-    int eventStarts = 0;
-    int eventDuration = 0;
-    int eventEnds = 0;
-    String eventTitle = "";
-
-    if (attendeesInRequest == NO_ATTENDEES){
-      return Arrays.asList(TimeRange.WHOLE_DAY);
-    } 
-    
-    if (requestDuration > TimeRange.WHOLE_DAY.duration()) {
-      return Arrays.asList();
-    }
-
-    for (Event event : events){
-      eventStarts = event.getWhen().start();
-      eventDuration = event.getWhen().duration();
-      eventEnds = event.getWhen().end();
-      eventTitle = event.getTitle();
-      if (attendeesInRequest.size() == 1){
-        for (String attendeeInRequest : attendeesInRequest) {
-          for (String attendeeInEvent : event.getAttendees()) {
-            if (!attendeeInRequest.equals(attendeeInEvent)) {
-              availableTimes.add(TimeRange.fromStartEnd(TimeForNewEventsBegin, endOfDay, true));
-              return availableTimes;
-            }
-          }
+      // define 'coveredTimesForAttendees' as ArrayList to use 
+      // suitable method for sorting the time ranges
+      ArrayList<TimeRange> coveredTimesForAttendees = new ArrayList <TimeRange> ();
+      for(Event event: events) {
+        Collection<String> attendeesInEvent = event.getAttendees();
+        TimeRange timeCoveredByEvent = event.getWhen();
+        for(String attendee : attendeesInEvent) {   
+          if(setOfAttendees.contains(attendee)) {
+            coveredTimesForAttendees.add(timeCoveredByEvent);
+            break;
+          } 
         }
       }
-      if (TimeForNewEventsBegin >= eventStarts && TimeForNewEventsBegin >= eventEnds) 
-      {continue;}
-      if (TimeForNewEventsBegin > eventStarts) {
-        totalEvents.add(new Event(eventTitle, TimeRange.fromStartEnd(
-            TimeForNewEventsBegin, eventEnds, false), attendeesInRequest));
-      } else {
-          totalEvents.add(new Event(eventTitle, TimeRange.fromStartDuration(
-              eventStarts, eventDuration), attendeesInRequest));
+      Collections.sort(coveredTimesForAttendees, TimeRange.ORDER_BY_START);
+      return coveredTimesForAttendees;
+    }
+
+    // calculate and return available time ranges for requested events
+    private static Collection<TimeRange> getAvailableTimes(Collection<Event> events,
+    Collection<String> mandatoryAttendees, long requestDuration) {
+      Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
+
+      int timeForNewEventsBegin = TimeRange.START_OF_DAY;
+      int eventStart = 0;
+      int eventEnd = 0;
+
+      if (requestDuration > WHOLE_DAY) {
+        return availableTimes;
       }
-      TimeForNewEventsBegin = eventEnds;
-    }
 
-    TimeForNewEventsBegin = TimeRange.START_OF_DAY;
-    for (Event event : totalEvents) {
-      eventStarts = event.getWhen().start();
-      eventEnds = event.getWhen().end();
-      TimeRange beforeNextEvent = TimeRange.fromStartEnd(TimeForNewEventsBegin, eventStarts, false);
-      if (beforeNextEvent.duration() >= requestDuration) {
-        availableTimes.add(beforeNextEvent);
+      if(mandatoryAttendees == NO_ATTENDEES) {
+        availableTimes.add(TimeRange.WHOLE_DAY);
+        return availableTimes;
       }
-      TimeForNewEventsBegin = eventEnds;
-    }
 
-    TimeRange afterLastEventInDay = TimeRange.fromStartEnd(
-        TimeForNewEventsBegin, endOfDay, true);
+      if(events == NO_EVENTS) {
+        availableTimes.add(TimeRange.WHOLE_DAY);
+        return availableTimes;
+      }
+      
+      Collection<TimeRange> coveredTimesForAttendees = 
+        getCoveredTimesForAttendees(events, mandatoryAttendees);
+      for(TimeRange coveredTime : coveredTimesForAttendees) {
+        eventStart = coveredTime.start();
+        eventEnd = coveredTime.end();
+        if(eventStart < timeForNewEventsBegin) {
+          timeForNewEventsBegin = Math.max(timeForNewEventsBegin, eventEnd);
+          continue;            
+        }
+       
+        if(eventStart >= timeForNewEventsBegin + requestDuration) {
+          availableTimes.add(TimeRange.fromStartEnd(timeForNewEventsBegin, eventStart, false));
+        }
+        timeForNewEventsBegin = eventEnd;
+      }
+      
+      if(endOfDay >= timeForNewEventsBegin + requestDuration) {
+        availableTimes.add(TimeRange.fromStartEnd(timeForNewEventsBegin, endOfDay, true));
+      }
 
-    // From last event to the end of the day could be available 
-    // if there's some time in-between  
-    if (afterLastEventInDay.start() - 1 != endOfDay) {
-      availableTimes.add(afterLastEventInDay);
+      return availableTimes;
     }
-    return availableTimes;
-  }
+    
+    public Collection <TimeRange> query(Collection <Event> events, MeetingRequest request) {
+      Collection<String> mandatoryAttendees = request.getAttendees();
+
+      long requestDuration = request.getDuration();
+
+      Collection<TimeRange> availableTimesForRequestedEvents = getAvailableTimes(events, mandatoryAttendees, requestDuration);
+      return availableTimesForRequestedEvents;              
+    }
 }
