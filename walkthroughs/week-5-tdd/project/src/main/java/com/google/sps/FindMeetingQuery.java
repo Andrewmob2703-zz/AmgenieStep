@@ -14,16 +14,16 @@
 
 package com.google.sps;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.Collection;
+import java.util.Collections;
 
 public final class FindMeetingQuery {
   private static final Collection<Event> NO_EVENTS = Collections.emptySet();
-  private static final Collection<String> NO_ATTENDEES= Collections.emptySet();  
+  private static final Collection<String> NO_ATTENDEES = Collections.emptySet();  
   private static final int endOfDay = TimeRange.END_OF_DAY; 
   
   private static int WHOLE_DAY = 1440;
