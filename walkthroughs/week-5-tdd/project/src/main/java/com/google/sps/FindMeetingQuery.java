@@ -22,14 +22,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public final class FindMeetingQuery {
-  private static final Collection<Event> NO_EVENTS = Collections.emptySet();
-  private static final Collection<String> NO_ATTENDEES = Collections.emptySet();  
+public final class FindMeetingQuery {  
   private static final int endOfDay = TimeRange.END_OF_DAY; 
   
   private static int WHOLE_DAY = 1440;
 
-    // sort and return busy times for requested attendees
+    // Sort and return busy times for requested attendees.
     private static Collection<TimeRange> getCoveredTimesForAttendees(Collection<Event> events,
     Collection<String> mandatoryAttendees) {   
       Set<String> setOfAttendees = new HashSet<String>();
@@ -37,9 +35,9 @@ public final class FindMeetingQuery {
         setOfAttendees.add(attendee);
       }
 
-      // define 'coveredTimesForAttendees' as ArrayList to use 
-      // suitable method for sorting the time ranges
-      ArrayList<TimeRange> coveredTimesForAttendees = new ArrayList <TimeRange> ();
+      // Define 'coveredTimesForAttendees' as ArrayList to use 
+      // suitable method for sorting the time ranges.
+      ArrayList<TimeRange> coveredTimesForAttendees = new ArrayList<TimeRange>();
       for(Event event: events) {
         Collection<String> attendeesInEvent = event.getAttendees();
         TimeRange timeCoveredByEvent = event.getWhen();
@@ -54,7 +52,7 @@ public final class FindMeetingQuery {
       return coveredTimesForAttendees;
     }
 
-    // calculate and return available time ranges for requested events
+    // Calculate and return available time ranges for requested events.
     private static Collection<TimeRange> getAvailableTimes(Collection<Event> events,
     Collection<String> mandatoryAttendees, long requestDuration) {
       Collection<TimeRange> availableTimes = new ArrayList<TimeRange>();
@@ -67,12 +65,12 @@ public final class FindMeetingQuery {
         return availableTimes;
       }
 
-      if(mandatoryAttendees == NO_ATTENDEES) {
+      if(mandatoryAttendees.isEmpty()) {
         availableTimes.add(TimeRange.WHOLE_DAY);
         return availableTimes;
       }
 
-      if(events == NO_EVENTS) {
+      if(events.isEmpty()) {
         availableTimes.add(TimeRange.WHOLE_DAY);
         return availableTimes;
       }

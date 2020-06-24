@@ -278,18 +278,19 @@ public final class FindMeetingQueryTest {
   @Test
   public void unsortedEvents() {
     Collection<Event> events = Arrays.asList(
-        new Event("Event 3", TimeRange.fromStartEnd(
-            TIME_1000AM, TIME_1100AM, false), Arrays.asList(PERSON_A)),
-        new Event("Event 1", TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false), Arrays.asList(PERSON_A)));
+        new Event("Event 3", TimeRange.fromStartEnd(TIME_1000AM, TIME_1100AM, false),
+            Arrays.asList(PERSON_A)),
+        new Event("Event 1", TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
+            Arrays.asList(PERSON_A)));
 
-        MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
 
-        Collection<TimeRange> actual = query.query(events, request);
-        Collection<TimeRange> expected = Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
-            TimeRange.fromStartEnd(TIME_0900AM, TIME_1000AM, false), 
-            TimeRange.fromStartEnd(TIME_1100AM, TimeRange.END_OF_DAY, true));
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
+        TimeRange.fromStartEnd(TIME_0900AM, TIME_1000AM, false), 
+        TimeRange.fromStartEnd(TIME_1100AM, TimeRange.END_OF_DAY, true));
 
-        Assert.assertEquals(expected, actual);
+    Assert.assertEquals(expected, actual);
   }
 }
 
